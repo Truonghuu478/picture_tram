@@ -55,12 +55,27 @@
   <body>
     <div id="info">Tranh Hoa Hướng Dương</div>
 
-    <div style="opacity: 0">
-      <audio id="mucsic" controls autoplay>
-        <source src="./music/Piano_Van_Gogh.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
-    </div>
+      <div class="play-music active" title="Tắt/mở nhạc">
+        <audio id="music" controls autoplay>
+          <source src="./music/Piano_Van_Gogh.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+   
+
+    <script>
+      function handleMusic() {
+        const music = document.getElementById("music");
+
+        if (music.paused) {
+          music.play();
+        } else {
+          music.pause();
+        }
+      }
+      document
+        .querySelector(".play-music")
+        .addEventListener("click", handleMusic);
+    </script>
     <script type="importmap">
       {
         "imports": {

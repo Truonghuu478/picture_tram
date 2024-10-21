@@ -6,9 +6,100 @@ body {
 	font-size: 13px;
 	line-height: 24px;
 	overscroll-behavior: none;
-    align-items: center;
-    margin:0 auto;
-    overflow: hidden;
+	align-items: center;
+	margin: 0 auto;
+	overflow: hidden;
+}
+.container {
+	width: 100vw;
+	height: 100vh;
+}
+@keyframes clickEffect {
+	0% {
+		transform: scale(1);
+		box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	}
+	50% {
+		transform: scale(1.2);
+		box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+	}
+	100% {
+		transform: scale(1);
+		box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	}
+}
+
+.play-music {
+	position: absolute;
+	top: 10px;
+	right: 100px;
+	z-index: 999;
+	background: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	padding: 5px;
+	border-radius: 50%;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.play-music:hover {
+	transform: scale(1.2);
+	background-color: rgba(255, 255, 255, 0.1);
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+}
+
+
+.play-music:hover::after {
+	opacity: 1;
+}
+
+.play-music::after {
+	content: 'Nhấn để bật/tắt nhạc';
+	position: absolute;
+	bottom: -40px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: rgba(0, 0, 0, 0.7);
+	color: #fff;
+	padding: 5px;
+	border-radius: 3px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 1;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	font-family: 'Brush Script MT', cursive; /* Font chữ kiểu viết tay */
+	color: #ffcc00; /* Màu chữ vàng */
+	text-shadow: 1px 1px 2px #000; /* Thêm bóng chữ */
+}
+
+.play-music:hover::after {
+	opacity: 1;
+	transform: translateX(-50%) translateY(-5px); /* Thêm hiệu ứng di chuyển */
+}
+
+.play-music audio {
+	opacity: 0;
+	overflow: hidden;
+	width: 1px; /* Đặt width nhỏ để không chiếm diện tích */
+	height: 1px; /* Đặt height nhỏ để không chiếm diện tích */
+	position: absolute; /* Đặt position absolute để không ảnh hưởng đến layout */
+}
+
+.play-music::before {
+	content: '🎵';
+	font-size: 20px;
+	margin-right: 0;
+	transition: transform 0.3s ease;
+}
+
+.play-music:hover::before {
+	transform: rotate(360deg);
 }
 
 a {
@@ -24,7 +115,6 @@ button {
 	cursor: pointer;
 	text-transform: uppercase;
 }
-
 #info {
 	position: absolute;
 	top: 0px;
@@ -36,9 +126,13 @@ button {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	/* pointer-events: none; */
-    z-index: 10; /* Tăng z-index để nó nằm trên các thành phần khác */
-        pointer-events: auto; /* Cho phép tương tác với các sự kiện chuột */
+	z-index: 10; /* Tăng z-index để nó nằm trên các thành phần khác */
+	pointer-events: auto; /* Cho phép tương tác với các sự kiện chuột */
+	background: rgba(0, 0, 0, 0.7); /* Thêm nền mờ */
+	color: #ffcc00; /* Màu chữ vàng */
+	font-family: 'Brush Script MT', cursive; /* Font chữ kiểu viết tay */
+	font-size: 24px; /* Tăng kích thước chữ */
+	border-bottom: 2px solid #ffcc00; /* Thêm đường viền dưới */
 }
 a, button, input, select {
 	pointer-events: auto;
