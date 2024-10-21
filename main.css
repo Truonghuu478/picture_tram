@@ -186,3 +186,16 @@ a, button, input, select {
 	margin-top: 20px;
 	padding: 10px;
 }
+
+.body {
+
+    width: 50px; /* Kích thước kính lúp */
+    height: 50px; /* Kích thước kính lúp */
+    border: 5px solid #000;
+    border-radius: 50%; /* Tạo hình tròn cho kính lúp */
+    position: absolute;
+    pointer-events: none; /* Không cho phép tương tác với kính lúp */
+    background-image: url('./textures/search.png');
+    background-size: cover; /* Làm cho hình ảnh kính lúp vừa vặn */
+    display: none; /* Ẩn kính lúp khi không cần */
+}
