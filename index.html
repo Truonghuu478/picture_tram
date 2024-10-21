@@ -55,6 +55,12 @@
   <body>
     <div id="info">Tranh Hoa Hướng Dương</div>
 
+    <div style="opacity: 0">
+      <audio id="mucsic" controls autoplay>
+        <source src="./music/Piano_Van_Gogh.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+    </div>
     <script type="importmap">
       {
         "imports": {
@@ -259,6 +265,13 @@
 
         renderer.setScissorTest(false);
       }
+      function onDocumentMouseWheel(event) {
+        // Điều chỉnh theo trục Z để zoom
+        camera.position.z += event.deltaY * 0.1; // Tốc độ zoom có thể điều chỉnh với hệ số 0.1
+        // Giới hạn camera để tránh zoom quá xa hoặc quá gần
+        camera.position.z = Math.max(500, Math.min(3000, camera.position.z));
+      }
+      document.addEventListener("wheel", onDocumentMouseWheel, false);
     </script>
   </body>
 </html>
