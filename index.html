@@ -21,7 +21,10 @@
 
     <!-- Facebook Open Graph -->
     <meta property="og:title" content="Bức tranh Hoa Hướng Dương" />
-    <meta property="og:description" content="Bức tranh Hoa Hướng Dương của Trâm, tặng cho tôi khi chúng tôi đi xem triển lãm tranh Van Gogh" />
+    <meta
+      property="og:description"
+      content="Bức tranh Hoa Hướng Dương của Trâm, tặng cho tôi khi chúng tôi đi xem triển lãm tranh Van Gogh"
+    />
     <meta property="og:image" content="textures/hoa_tram.jpg" />
     <meta property="og:url" content="https://sunflower-painting.vercel.app" />
     <meta property="og:type" content="website" />
@@ -64,14 +67,12 @@
 
     <div id="info">Tranh Hoa Hướng Dương</div>
 
-      <div class="play-music active" title="Tắt/mở nhạc">
-        <audio id="music" controls autoplay>
-          <source src="./music/Piano_Van_Gogh.mp3" type="audio/mpeg" />
-        </audio>
-      </div>
-   
+    <div class="play-music active" title="Tắt/mở nhạc">
+      <audio id="music" controls autoplay>
+        <source src="./music/Piano_Van_Gogh.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
 
-  
     <script type="importmap">
       {
         "imports": {
@@ -84,13 +85,23 @@
     <script type="module">
       import * as THREE from "three";
 
+      // Hằng số
       const SCREEN_WIDTH = window.innerWidth;
       const SCREEN_HEIGHT = window.innerHeight;
+      const CAMERA_FOV = 35;
+      const CAMERA_NEAR = 1;
+      const CAMERA_FAR = 5000;
+      const CAMERA_START_Z = 2000;
+      const MOUSE_SENSITIVITY = 0.05;
+      const ZOOM_SPEED = 0.2;
+      const ZOOM_MIN = 500;
+      const ZOOM_MAX = 3000;
+      const PLANE_SIZE = 100;
+      const PLANE_SCALE = 1000;
+      const FLOOR_HEIGHT_FACTOR = -1.117;
 
       let container;
-
       let camera, scene, scene2, renderer;
-
       let mouseX = 0,
         mouseY = 0;
 
@@ -104,12 +115,12 @@
         document.body.appendChild(container);
 
         camera = new THREE.PerspectiveCamera(
-          35,
+          CAMERA_FOV,
           SCREEN_WIDTH / SCREEN_HEIGHT,
-          1,
-          5000
+          CAMERA_NEAR,
+          CAMERA_FAR
         );
-        camera.position.z = 2000;
+        camera.position.z = CAMERA_START_Z;
 
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
@@ -120,7 +131,6 @@
         scene2.fog = new THREE.Fog(0x000000, 1500, 4000);
 
         // GROUND
-
         const imageCanvas = document.createElement("canvas");
         const context = imageCanvas.getContext("2d");
 
@@ -151,18 +161,17 @@
           map: textureCanvas2,
         });
 
-        const geometry = new THREE.PlaneGeometry(100, 100);
+        const geometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE);
 
         const meshCanvas = new THREE.Mesh(geometry, materialCanvas);
         meshCanvas.rotation.x = -Math.PI / 2;
-        meshCanvas.scale.set(1000, 1000, 1000);
+        meshCanvas.scale.set(PLANE_SCALE, PLANE_SCALE, PLANE_SCALE);
 
         const meshCanvas2 = new THREE.Mesh(geometry, materialCanvas2);
         meshCanvas2.rotation.x = -Math.PI / 2;
-        meshCanvas2.scale.set(1000, 1000, 1000);
+        meshCanvas2.scale.set(PLANE_SCALE, PLANE_SCALE, PLANE_SCALE);
 
         // PAINTING
-
         const callbackPainting = function () {
           const image = texturePainting.image;
 
@@ -172,7 +181,7 @@
           scene.add(meshCanvas);
           scene2.add(meshCanvas2);
 
-          const geometry = new THREE.PlaneGeometry(100, 100);
+          const geometry = new THREE.PlaneGeometry(PLANE_SIZE, PLANE_SIZE);
           const mesh = new THREE.Mesh(geometry, materialPainting);
           const mesh2 = new THREE.Mesh(geometry, materialPainting2);
 
@@ -180,8 +189,8 @@
           addPainting(scene2, mesh2);
 
           function addPainting(zscene, zmesh) {
-            zmesh.scale.x = image.width / 100;
-            zmesh.scale.y = image.height / 100;
+            zmesh.scale.x = image.width / PLANE_SIZE;
+            zmesh.scale.y = image.height / PLANE_SIZE;
 
             zscene.add(zmesh);
 
@@ -190,8 +199,8 @@
               new THREE.MeshBasicMaterial({ color: 0x000000 })
             );
             meshFrame.position.z = -10.0;
-            meshFrame.scale.x = (1.1 * image.width) / 100;
-            meshFrame.scale.y = (1.1 * image.height) / 100;
+            meshFrame.scale.x = (1.1 * image.width) / PLANE_SIZE;
+            meshFrame.scale.y = (1.1 * image.height) / PLANE_SIZE;
             zscene.add(meshFrame);
 
             const meshShadow = new THREE.Mesh(
@@ -205,15 +214,14 @@
             meshShadow.position.y = (-1.1 * image.height) / 2;
             meshShadow.position.z = (-1.1 * image.height) / 2;
             meshShadow.rotation.x = -Math.PI / 2;
-            meshShadow.scale.x = (1.1 * image.width) / 100;
-            meshShadow.scale.y = (1.1 * image.height) / 100;
+            meshShadow.scale.x = (1.1 * image.width) / PLANE_SIZE;
+            meshShadow.scale.y = (1.1 * image.height) / PLANE_SIZE;
             zscene.add(meshShadow);
 
-            const floorHeight = (-1.117 * image.height) / 2;
+            const floorHeight = (FLOOR_HEIGHT_FACTOR * image.height) / 2;
             meshCanvas.position.y = meshCanvas2.position.y = floorHeight;
           }
         };
-
         const texturePainting = new THREE.TextureLoader().load(
           "textures/hoa_tram_1.jpg",
           callbackPainting
@@ -255,8 +263,9 @@
       }
 
       function animate() {
-        camera.position.x += (mouseX - camera.position.x) * 0.05;
-        camera.position.y += (-(mouseY - 200) - camera.position.y) * 0.05;
+        camera.position.x += (mouseX - camera.position.x) * MOUSE_SENSITIVITY;
+        camera.position.y +=
+          (-(mouseY - 200) - camera.position.y) * MOUSE_SENSITIVITY;
 
         camera.lookAt(scene.position);
 
@@ -276,14 +285,19 @@
 
         renderer.setScissorTest(false);
       }
+
       function onDocumentMouseWheel(event) {
         // Điều chỉnh theo trục Z để zoom
-        camera.position.z += event.deltaY * 0.1; // Tốc độ zoom có thể điều chỉnh với hệ số 0.1
+        camera.position.z += event.deltaY * ZOOM_SPEED; // Tốc độ zoom có thể điều chỉnh với hệ số 0.1
         // Giới hạn camera để tránh zoom quá xa hoặc quá gần
-        camera.position.z = Math.max(500, Math.min(3000, camera.position.z));
+        camera.position.z = Math.max(
+          ZOOM_MIN,
+          Math.min(ZOOM_MAX, camera.position.z)
+        );
       }
+
       document.addEventListener("wheel", onDocumentMouseWheel, false);
     </script>
-        <script src="./main.js"></script>
+    <script src="./main.js"></script>
   </body>
 </html>
